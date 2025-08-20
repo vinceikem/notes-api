@@ -13,7 +13,7 @@ app.use(express.json())
 
 app.get("/",auth,(req,res)=>{
     console.log("User joined server")
-    res.send("home");
+    res.send("home")
 })
 
 app.get("/me",auth,async(req,res)=>{
