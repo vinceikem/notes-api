@@ -44,7 +44,9 @@ SECRET_JWT_KEY=your_secret_key
 
 ### Start the server:
 
+```bash
 npm start
+```
 
 
 ---
@@ -75,7 +77,7 @@ npm start
 
 #### Register
 
-POST `/auth/register`
+``POST`` `/auth/register`
 
 Body:
 
@@ -90,136 +92,164 @@ Body:
 
 ### Login
 
-POST /auth/login
+``POST``  `/auth/login`
 
 Body:
 
+```
 {
   "username": "john",
   "password": "123456"
 }
+```
 
 ### Response:
 
+```
 {
   "success": true,
   "accessToken": "jwt_access_token",
   "refreshToken": "jwt_refresh_token"
 }
+```
 
 
 ---
 
 ### Refresh Token
 
-POST /auth/refresh
+``POST`` `/auth/refresh`
 
 Body:
 
+```
 {
   "refreshToken": "jwt_refresh_token"
 }
+```
 
 
 ---
 
 ### Logout
 
-POST /auth/logout
+``POST`` `/auth/logout`
+```
 Authorization: Bearer <access_token>
+```
 
 
 ---
 
-User Route
+## User Route
 
-Get Current User
+### Get Current User
 
-GET /me
+``GET`` `/me`
+```
 Authorization: Bearer <access_token>
+```
 
 Response:
 
+```
 {
   "success": true,
   "id": "userId",
   "username": "john",
   "notesCount": 5
 }
+```
 
 
 ---
 
-Notes Routes
+## Notes Routes
 
-> All routes require authentication.
+`> All routes require authentication.`
 
 
 
-Create Note
+### Create Note
 
-POST /notes
+``POST`` `/notes`
+```
 Authorization: Bearer <access_token>
+```
 
 Body:
 
+```
 {
   "title": "My first note",
   "content": "This is the content of my note."
 }
+```
 
 
 ---
 
-Get All Notes
+### Get All Notes
 
-GET /notes
+``GET`` `/notes`
+```
 Authorization: Bearer <access_token>
+```
 
 
 ---
 
-Get Note by ID
+### Get Note by ID
 
-GET /notes/:id
+``GET`` `/notes/:id`
+```
 Authorization: Bearer <access_token>
+```
 
 
 ---
 
-Update Note
+### Update Note
 
-PUT /notes/:id
+``PUT`` `/notes/:id`
+```
 Authorization: Bearer <access_token>
+```
 
 Body:
 
+```
 {
   "title": "Updated title",
   "content": "Updated content"
 }
+```
 
 
 ---
 
-Delete Note
+### Delete Note
 
-DELETE /notes/:id
+``DELETE`` `/notes/:id`
+```
 Authorization: Bearer <access_token>
+```
 
 
 ---
 
-Delete All Notes
+### Delete All Notes
 
-DELETE /notes
+``DELETE`` `/notes`
+```
 Authorization: Bearer <access_token>
+```
 
 
 ---
 
-Project Structure
-
+## Project Structure
+```
 notes-api/
 │── server.js
 │── .env
@@ -245,18 +275,27 @@ notes-api/
 │
 └── database/
     └── db.js
+```
+
+---
+
+## License
+
+##### This project is licensed under the MIT License.
+##### Feel free to use and modify it for your own projects.
 
 
 ---
 
-License
+## Author
 
-This project is licensed under the MIT License.
-Feel free to use and modify it for your own projects.
+Developed by **VinceIkem**
 
+## Contact
 
----
+If you have any questions, suggestions, or issues, feel free to reach out:
 
-Author
+- **Author**: Vince Ikem  
+- **GitHub**: [@vinceikem](https://github.com/vinceikem)  
+- **Email**: vince.ikem@gmail.com  
 
-Developed by Vinceikem
