@@ -23,66 +23,72 @@ This API allows users to register, log in, manage access/refresh tokens, and per
 
 Clone the repository:
 
-`
+```bash
 git clone https://github.com/vinceikem/notes-api.git
-cd notes-api`
+cd notes-api
+```
 
-Install dependencies:
+### Install dependencies:
 
+```bash
 npm install
+```
 
-Set up environment variables by creating a .env file in the root:
+### Set up environment variables by creating a .env file in the root:
 
+```
 PORT=5000
 MONGO_URI=your_mongodb_connection_string
 SECRET_JWT_KEY=your_secret_key
+```
 
-Start the server:
+### Start the server:
 
 npm start
 
 
 ---
 
-Usage
+## Usage
 
-The API runs on:
+### The API runs on:
 
-http://localhost:5000
+`http://localhost:PORT`
 
-Default routes:
+### Default routes:
 
-/auth → authentication routes
+`/auth` → authentication routes
 
-/notes → notes routes
+`/notes` → notes routes
 
-/me → get current user info
+`/me` → get current user info
 
-/ → test home route (protected)
+`/` → test home route (protected)
 
 
 
 ---
 
-API Documentation
+## API Documentation
 
-Authentication Routes
+### Authentication Routes
 
-Register
+#### Register
 
-POST /auth/register
+POST `/auth/register`
 
 Body:
 
+```
 {
   "username": "john",
   "password": "123456"
 }
-
+```
 
 ---
 
-Login
+### Login
 
 POST /auth/login
 
@@ -93,7 +99,7 @@ Body:
   "password": "123456"
 }
 
-Response:
+### Response:
 
 {
   "success": true,
@@ -104,7 +110,7 @@ Response:
 
 ---
 
-Refresh Token
+### Refresh Token
 
 POST /auth/refresh
 
@@ -117,7 +123,7 @@ Body:
 
 ---
 
-Logout
+### Logout
 
 POST /auth/logout
 Authorization: Bearer <access_token>
