@@ -110,8 +110,6 @@ const deleteNote = async (req,res) => {
     }
 
 }
-const deleteAllNotes = async (req,res) => {
 
-}
 
 module.exports = {getNotes,getNotesById,createNote,updateNotes,deleteAllNotes,deleteNote}
