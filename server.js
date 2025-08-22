@@ -7,12 +7,11 @@ const authRoutes = require("./routes/authRoutes");
 const notesRoutes = require("./routes/notesRoutes")
 const auth = require("./middleware/auth");
 const app = express();
-connectDB();
+
 
 app.use(express.json())
 
 app.get("/",auth,(req,res)=>{
-    console.log("User joined server")
     res.send("home")
 })
 
@@ -32,8 +31,8 @@ app.use("/auth",authRoutes);
 app.use("/notes",notesRoutes);
 
 
-
-app.listen(process.env.PORT,()=>{
+connectDB()
+.then(app.listen(process.env.PORT,()=>{
     console.log(`Server listening on ${process.env.PORT}`);
-
-});
+}))
+.catch((err)=>{console.log(err)})

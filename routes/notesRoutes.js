@@ -8,8 +8,6 @@ const router = express.Router();
 router.use(auth);
 router.post("/",noteValidator,createNote)
 router.get("/",getNotes)
-router.delete("/",deleteAllNotes)
-//router.use(noteIdValidator)
 router.get("/:id",noteIdValidator,getNotesById);
 router.put("/:id",noteIdValidator,noteValidator,updateNotes)
 router.delete("/:id",noteIdValidator,deleteNote)

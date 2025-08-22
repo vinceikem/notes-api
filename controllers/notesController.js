@@ -3,7 +3,7 @@ const errorMessage = require("../utils/errorMessage");
 
 const getNotes = async (req,res) => {
     const {id} = req.user;
-    let {page=1,limit=5,title=""} = req.query;
+    let {page=1,limit=5} = req.query;
     page=parseInt(page);
     limit = parseInt(limit)
 
@@ -39,29 +39,22 @@ const totalNotes = await Note.countDocuments({user:id});
     
 }
 const getNotesById = async (req,res) => {
-    const id = req.noteId;
-    try{
-const foundNote = await Note.findById(id);
-    const userId = foundNote.user.valueOf();
-    console.log(req.user.id)
-    console.log(userId);
+    const note = req.note;
+    const userId = note.user.toString();
     if(req.user.id !== userId){
             return errorMessage(res,401,"Forbidden!!")
         }
-    return res.status(200).json({
+    res.status(200).json({
         success:true,
         note : foundNote,
     });
-
-    }catch(err){
-        return errorMessage(res,500,"Error fetching note")
-    }
     
 }
 const createNote = async (req,res) => {
-    const {title,content} = req.note;
+    const {title,content} = req.verifiedFields;
     const id = req.user.id;
-    try{const newNote =  new Note({
+    try{
+        const newNote =  new Note({
         user:id, title:title, content:content
     });
     await newNote.save()
@@ -71,16 +64,17 @@ const createNote = async (req,res) => {
         message:"Note has been created",
         note: {title:title,content:content}
     })}catch(err){
-        errorMessage(res,500,"Error creating user")
+        errorMessage(res,500,"Error creating note")
     }
     
 
 }
 const updateNotes = async (req,res) => {
-    const id = req.noteId;
-    const {title,content} = req.note;
+    const note = req.note;
+    const userId = req.user.id;
+    const {title,content} = req.verifiedFields;
     try {
-        if(req.user.id !== await Note.findById(id).user.valueOf()){
+        if(userId !== note.user.toString()){
             return errorMessage(res,401,"Forbidden!!")
         }
         const updatedNote = await Note.findByIdAndUpdate(id,{title:title,content:content},{new:true});
@@ -88,7 +82,7 @@ const updateNotes = async (req,res) => {
             success:true,
             message: `Note with id ${id} has been updated`,
             note: updatedNote
-        })
+        });
 
     } catch (error) {
         errorMessage(res,500,"Error updating note")
@@ -97,8 +91,8 @@ const updateNotes = async (req,res) => {
 
 }
 const deleteNote = async (req,res) => {
-  const id = req.noteId
-  const userId = Note.findById(id).user.valueOf();
+  const note = req.note
+  const userId = note.user.toString();
     if(req.user.id !== userId){
         return errorMessage(res,401,"Forbidden!!")
     }
@@ -112,4 +106,4 @@ const deleteNote = async (req,res) => {
 }
 
 
-module.exports = {getNotes,getNotesById,createNote,updateNotes,deleteAllNotes,deleteNote}
+module.exports = {getNotes,getNotesById,createNote,updateNotes,deleteNote}

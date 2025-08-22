@@ -11,9 +11,7 @@ const register = async (req, res) => {
     if (!body || Object.keys(body) < 1) {
         return res.status(400).json({ success: false, message: "JSON body required" })
     }
-    const { username = "", password } = body;
-    console.log("username", username)
-    console.log("password", password)
+    const { username = "", password="" } = body;
 
     try {
         const foundUsername = await User.find({ username: username });
@@ -27,7 +25,6 @@ const register = async (req, res) => {
             return errorMessage(res, 400, "Password must constain at least one number,one uppercase,one symbol and must be greater than 7 characters")
         }
         try {
-            console.log("HashingPassword")
             const hashedPassword = await argon2.hash(password)
             const newUser = new User({ username: username, password: hashedPassword })
             await newUser.save();
@@ -54,8 +51,9 @@ async function refreshToken(userId) {
                     userId: userId, type: "refresh", tokenId: rshTokenId
                 },
                     process.env.SECRET_RSH_KEY,
-                    { expiresIn: process.env.RSH_KEY_EXP })
-            const newRefreshToken = new RefreshToken({ tokenId: rshTokenId, token: refreshToken, userId: userId })
+                    { expiresIn: process.env.RSH_KEY_EXP });
+            const hashedToken = argon2.hash(refreshToken);
+            const newRefreshToken = new RefreshToken({ tokenId: rshTokenId, token: hashedToken, userId: userId })
             await newRefreshToken.save();
         }
         return { success: true, token: refreshToken }
@@ -74,9 +72,9 @@ const login = async (req, res) => {
     const user = await User.find({ username: username });
     const userId = user[0].id
     const userTokenVersion = user[0].tokenVersion;
-    const userPassword = user.at(0).password;
+    const hashedPassword = user.at(0).password;
     try {
-        const verified = await argon2.verify(userPassword, password)
+        const verified = await argon2.verify(hashedPassword, password)
         if (!user.length < 1 && !verified) {
             return errorMessage(res, 404, "Invalid Credidentials")
         }
@@ -105,11 +103,10 @@ const login = async (req, res) => {
 }
 
 const refresh = async (req, res) => {
-    //console.log(req.headers)
     const refreshToken = req.headers["x-refreshtoken"];
-    //console.log(refreshToken);
     try {
-        const decode = jwt.verify(refreshToken, process.env.SECRET_RSH_KEY);
+        const unhashedToken = argon2.verify(refreshToken) 
+        const decode = jwt.verify(unhashedToken, process.env.SECRET_RSH_KEY);
         if (!refreshToken || !decode) {
             return errorMessage(res, 401, "Invalid refresh token");
         }
@@ -138,10 +135,10 @@ const logout = async (req, res) => {
     try{
     await RefreshToken.deleteMany({userId:user.id});
     await User.updateOne({_id:user.id},{$inc:{tokenVersion : 1}});
-    res.send("logged out!")
+    res.json({success:true,message:"Successfully logged out"});
     }catch(e){
         return errorMessage(res,500,"Error logging out");
     }
 }
 
-module.exports = { register, login, refresh,logout}
+module.exports = {register, login, refresh, logout}
